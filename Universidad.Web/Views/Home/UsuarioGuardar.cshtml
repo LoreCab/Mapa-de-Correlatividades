@@ -1,0 +1,43 @@
+﻿@model Universidad.Web.Models.UsuarioGuardarModel
+
+@{
+    ViewBag.Title = "Usuarios";
+}
+
+    <style>
+        body {
+            background-color: antiquewhite;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+
+<div class="topbar">
+    <h1> @ViewBag.user.Nombre </h1>
+    <div class="actions">
+        @Html.ActionLink("salir", "Index", "Home")
+    </div>
+</div>
+
+<div class="page">
+    @using (Html.BeginForm("GuardarUsuario", "Home", FormMethod.Post, new { @class = "content" }))
+    {
+        <h2>Registrar un nuevo Alumno</h2>
+        @Html.HiddenFor(x => x.Id)
+        <div class="control">
+            <label>Nombre</label>
+            @Html.TextBoxFor(x => x.Nombre)
+        </div>
+        <div class="control">
+            <label>D.N.I.</label>
+            @Html.TextBoxFor(x => x.DNI)
+        </div>
+        <div class="control">
+            <label>Contraseña</label>
+            @Html.TextBoxFor(x => x.Password)
+        </div>
+
+        <button type="submit">Guardar</button>
+    }
+</div>
+

@@ -1,0 +1,71 @@
+﻿@model List<Universidad.Web.Models.UsuarioItemModel>
+
+@{
+    ViewBag.Title = "Usuarios";
+}
+
+    <style>
+        body {
+            background-color: antiquewhite;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+
+<div class="topbar">
+    <h1> @ViewBag.user.Nombre </h1>
+    <div class="actions">
+        @Html.ActionLink("salir", "Index", "Home")
+    </div>
+</div>
+
+<div class="page">
+    <div class="content">
+        <div class="actions-right">
+            @using (Html.BeginForm("ObtenerUsuario", "Home", FormMethod.Post))
+            {
+                <button type="submit">Agregar Nuevo Estudiante</button>
+            }
+        </div>
+        <div class="usuario-list">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="usuario-item">
+                    @Model[i].Nombre
+                    <div class="action">
+                        @using (Html.BeginForm("ObtenerUsuario", "Home", FormMethod.Post))
+                        {
+                            <input id="Id" name="Id" type="hidden" value="@Model[i].Id" />
+                            <button type="submit">Editar</button>
+                        }
+                        <button type="button" class="delete" onclick="eliminar(@Model[i].Id)">Eliminar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts  {
+    <script>
+        function eliminar(id) {
+            if (!confirm("Desea eliminar este usuario?")) {
+                return;
+            }
+
+            $.post('UsuarioEliminar', { id })
+                .then(function (_) {
+                    window.location = 'Usuarios';
+                })
+        }
+    </script>
+}
+
+
+
+
+
+
+

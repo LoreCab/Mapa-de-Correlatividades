@@ -1,0 +1,50 @@
+﻿@model List<Universidad.Web.Models.MateriaItemModel>
+
+@{
+    ViewBag.Title = "Configurar Materias";
+}
+
+    <style>
+        body {
+            background-color: antiquewhite;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+
+<div class="topbar">
+    <h1> @ViewBag.user.Nombre </h1>
+    <div class="actions">
+        @Html.ActionLink("Materias", "Materias", "Home")
+        @Html.ActionLink("salir", "Index", "Home")
+    </div>
+</div>
+
+<div class="page">
+
+
+    @using (Html.BeginForm("GuardarMaterias", "Home", FormMethod.Post, new { @class = "content" }))
+    {
+        <div class="materia-list">
+
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="materia-item">
+                    <span> @Model[i].Nombre </span>
+                    @Html.HiddenFor(model => model[i].Id)
+                    @Html.HiddenFor(model => model[i].IdUsuario)
+                    @Html.HiddenFor(model => model[i].IdMateria)
+                    @Html.DropDownListFor(model => model[i].Estado,
+                       new List<SelectListItem> {
+                           new SelectListItem { Value = "0", Text = "Aprobada", Selected = Model[i].Estado.Equals("0") },
+                           new SelectListItem { Value = "1", Text = "Regular", Selected = Model[i].Estado.Equals("1") },
+                           new SelectListItem { Value = "2", Text = "Sin Cursar", Selected = Model[i].Estado.Equals("2") },
+                       })
+                    @*@Html.DropDownListFor(model => model[i].Estado, (IEnumerable<SelectListItem>)ViewBag.List)*@
+                </div>
+            }
+        </div>
+        <button type="submit">Guardar</button>
+    }
+
+</div>

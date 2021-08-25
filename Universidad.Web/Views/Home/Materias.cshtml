@@ -1,0 +1,113 @@
+﻿@model List<IGrouping<int, Universidad.Web.Models.MateriaModel>>
+
+@{
+    ViewBag.Title = "Materias";
+}
+
+    <style>
+        body {
+            background-color: antiquewhite;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+
+<div class="topbar">
+    <h1> @ViewBag.user.Nombre </h1>
+    <div class="actions">
+        @Html.ActionLink("configurar", "ConfigurarMaterias", "Home")
+        @Html.ActionLink("salir", "Index", "Home")
+    </div>
+</div>
+
+<div class="page">
+    <div class="content">
+        <div class="estados">
+            <div class="estado selected"> 
+                SELECCIONADA
+            </div>
+            <div class="estado padre">
+                CORRELATIVAS ANTERIORES
+            </div>
+            <div class="estado hijo">
+                MATERIAS FUTURAS
+            </div>
+            <div class="estado estado-0">
+                APROBADAS
+            </div>
+            <div class="estado estado-1">
+                REGULAR
+            </div>
+            <div class="estado estado-2">
+                SIN CURSAR
+            </div>
+        </div>
+        <div class="grupos">
+            @foreach (var group in Model)
+            {
+                <div class="grupo">
+                    @foreach (var materia in group)
+                    {
+                        if (materia.Id == 1)
+                        {
+                            <div class="curso">PRIMER AÑO</div>
+                        }
+                        if (materia.Id == 11)
+                        {
+                            <div class="curso">SEGUNDO AÑO</div>
+                        }
+                        if (materia.Id == 22)
+                        {
+                            <div class="curso">TERCER AÑO</div>
+                        }
+                        if (materia.Id == 31)
+                        {
+                            <div class="curso">CUARTO AÑO</div>
+                        }
+                        if (materia.Id == 40)
+                        {
+                            <div class="curso">QUINTO AÑO</div>
+                        }
+                        <div id="@materia.Id" class="materia" onclick="render(@Json.Encode(materia), @Json.Encode(Model))">
+                            <h4> @materia.Nombre </h4>
+                            <span class="circulo">
+                                <span class="circulo-color estado-@materia.Estado"></span>
+                            </span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        function render(materia, grupos) {
+            const list = grupos.reduce((prev, current) => [...prev, ...current], []);
+            $('.materia').removeClass('selected').removeClass('padre').removeClass('hijo');
+            $(`#${materia.Id}`).addClass('selected');
+            padreRecursivo(materia.Padres, list);
+            hijoRecursivo(materia.Id, list);
+        }
+
+        function padreRecursivo(padres, list) {
+            padres.forEach(item => {
+                $(`#${item}`).addClass('padre');
+                const m = list.find(x => x.Id == item);
+                if (m) {
+                    padreRecursivo(m.Padres, list.filter(x => x.Level == m.Level - 1));
+                }
+            });
+        }
+
+        function hijoRecursivo(id, list) {
+            const hijos = list.filter(x => x.Padres.indexOf(id) > -1);
+            hijos.forEach(hijo => {
+                $(`#${hijo.Id}`).addClass('hijo');
+                hijoRecursivo(hijo.Id, list);
+            })
+        }
+    </script>
+}
